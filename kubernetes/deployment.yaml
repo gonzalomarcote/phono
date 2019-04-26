@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: 088174337422.dkr.ecr.eu-west-1.amazonaws.com/phono/api:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
