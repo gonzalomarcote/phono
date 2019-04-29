@@ -7,6 +7,8 @@ service:
   type: LoadBalancer
   externalPort: 5000
   internalPort: 5000
+configmap:
+  name: api-configmap
 deployment:
   name: api-deployment
   app: api

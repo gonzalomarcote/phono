@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.app }}
+  name: {{ .Values.deployment.name }}
   labels:
     app: {{ .Values.deployment.app }}
     release: {{ .Release.Name }}
@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Values.deployment.name }}
+        app: {{ .Values.deployment.app }}
         release: {{ .Release.Name  }}
     spec:
       containers:
