@@ -1,0 +1,17 @@
+# Default values for backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+service:
+  name: api-service
+  type: LoadBalancer
+  externalPort: 5000
+  internalPort: 5000
+deployment:
+  name: api-deployment
+  app: api
+image:
+  repository: 088174337422.dkr.ecr.eu-west-1.amazonaws.com/phono/api
+  tag: latest
+  pullPolicy: Always
+resources: {}
