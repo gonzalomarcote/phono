@@ -2,16 +2,16 @@
 Personal IoT bot with arduino to get data from some sensors and API
 
 ## Backend
-Python backend based in Flask - https://www.flaskapi.org/
+Python backend based in Flask - https://www.flaskapi.org/  
 
-Deploy locally with docker-compose with:  
+Build and deploy locally with docker-compose:  
 `$ docker-compose -p phono up -d`
 
 Once built, start/stop it with:  
 `$ docker-compose start phono`  
 `$ docker-compose stop phono`
 
-Remove it with:  
+Remove with:  
 `$ docker-compose rm phono`
 
 
