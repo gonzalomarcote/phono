@@ -1,13 +1,13 @@
 # Core Phono's python backend
-FROM python:3.6
+FROM python:3.8
 LABEL maintainer="Gonzalo Marcote <gonzalomarcote@gmail.com>"
 LABEL version="1.1"
 
 # Install backend
 RUN mkdir /api
 WORKDIR /api
-COPY docker/requirements.txt /api/requirements.txt
-COPY docker/api.py /api/api.py
+COPY ./api/requirements.txt /api/requirements.txt
+COPY ./api/api.py /api/api.py
 RUN pip install -r requirements.txt
 
 # Init backend

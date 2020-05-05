@@ -3,17 +3,17 @@
 # Declare variables to be passed into your templates.
 
 service:
-  name: api-service
+  name: phono-service
   type: LoadBalancer
   externalPort: 5000
   internalPort: 5000
 configmap:
-  name: api-configmap
+  name: phono-configmap
 deployment:
-  name: api-deployment
-  app: api
+  name: phono-deployment
+  app: phono
 image:
-  repository: gcr.io/phono-ai/api
+  repository: 088174337422.dkr.ecr.eu-west-1.amazonaws.com/phono:latest
   tag: latest
   pullPolicy: Always
 resources: {}
