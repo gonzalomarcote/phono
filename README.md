@@ -15,18 +15,17 @@ Once built, start/stop it with:
 Remove with:  
 `$ docker-compose rm phono`
 
+### Prod deploy with helm in k8s
+Deploy with helm:
+`helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml`  
+`helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml`  
 
-Interact with phono api:  
+### Interact with phono api:
 ```
-$ curl -X GET http://0.0.0.0:5000/  or curl -X GET http://api.marcote.org
+$ curl -X GET http://0.0.0.0:5000/  or curl -X GET https://phono.marcote.org
 [{"url": "http://0.0.0.0:5000/0/", "text": "do the shopping"}, {"url": "http://0.0.0.0:5000/1/", "text": "build the codez"}, {"url": "http://0.0.0.0:5000/2/", "text": "paint the door"}]
 $ curl -X GET http://0.0.0.0:5000/1/
 {"url": "http://0.0.0.0:5000/1/", "text": "build the codez"}
 $ curl -X PUT http://0.0.0.0:5000/1/ -d text="flask api is teh awesomez"
 {"url": "http://0.0.0.0:5000/1/", "text": "flask api is teh awesomez"}
-```
 
-### Prod deploy with helm in k8s
-Deploy with helm:
-* `helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml`  
-* `helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml`  
