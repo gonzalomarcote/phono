@@ -20,4 +20,4 @@ spec:
       - backend:
           serviceName: collector
           servicePort: {{ .Values.ingress.collectorPort }}
-        path: /
+        path: /collector

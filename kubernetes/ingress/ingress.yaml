@@ -16,7 +16,7 @@ spec:
       - backend:
           serviceName: api
           servicePort: 5000
-        path: /api
+        path: /
       - backend:
           serviceName: collector
           servicePort: 6000
