@@ -18,20 +18,8 @@ ms = os.environ["MS"]
 KVUri = "https://b2c-coco-" + env + ".vault.azure.net"
 
 if env == "dev":
-    os.environ['AZURE_CLIENT_ID'] = "cba237f5-32b5-4b15-9293-24ae5aee142c"
-    os.environ['AZURE_TENANT_ID'] = "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
 elif env == "qa":
-    os.environ['AZURE_CLIENT_ID'] = "3163a877-bafc-49bc-94fe-26a0f8ec0ba8"
-    os.environ['AZURE_TENANT_ID'] = "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
-elif env == "uat":
-    os.environ['AZURE_CLIENT_ID'] = "345f3114-5105-4df9-a96a-ae3298758b6f"
-    os.environ['AZURE_TENANT_ID'] = "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
-elif env == "preprod":
-    os.environ['AZURE_CLIENT_ID'] = "33243a02-4624-4002-958f-a514573f5051"
-    os.environ['AZURE_TENANT_ID'] = "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
 elif env == "prod":
-    os.environ['AZURE_CLIENT_ID'] = "79a71401-69ba-4f9f-ae6f-96df4ce87db4"
-    os.environ['AZURE_TENANT_ID'] = "bd3eeefe-e2f5-40d6-abc6-bbb9c8f48d03"
 
 
 ## Loging to Azure Key Vault
