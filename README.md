@@ -1,5 +1,5 @@
-# phono
-Personal IoT bot with arduino to get data from some sensors and API
+# Phono
+Personal IoT bot with arduino to get data from some sensors and API to interact with.  
 
 ## Backend
 Python backend based in Flask - https://www.flaskapi.org/  
@@ -17,7 +17,7 @@ Remove with:
 
 Interact with phono api:  
 ```
-$ curl -X GET http://0.0.0.0:5000/  or curl -X GET http://api.marcote.org/phono
+$ curl -X GET http://0.0.0.0:5000/  or curl -X GET http://api.marcote.org
 [{"url": "http://0.0.0.0:5000/0/", "text": "do the shopping"}, {"url": "http://0.0.0.0:5000/1/", "text": "build the codez"}, {"url": "http://0.0.0.0:5000/2/", "text": "paint the door"}]
 $ curl -X GET http://0.0.0.0:5000/1/
 {"url": "http://0.0.0.0:5000/1/", "text": "build the codez"}

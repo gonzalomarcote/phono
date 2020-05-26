@@ -12,7 +12,7 @@ notes = {
 
 def note_repr(key):
     return {
-        'url': request.host_url.rstrip('/') + url_for('notes_detail', key=key),
+        'url': url_for('notes_detail', key=key, _external=True, _scheme='https'),
         'text': notes[key]
     }
 

@@ -1,13 +1,13 @@
 version: "3.2"
 services:
-  phono:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
       cache_from:
-        - phono:latest
-    image: phono:latest
-    container_name: phono
+        - phono/api:latest
+    image: phono/api:latest
+    container_name: api
     ports:
       - "5000:5000"
     environment:

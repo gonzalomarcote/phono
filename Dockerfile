@@ -1,16 +1,16 @@
-# Core Phono's python backend
+# Core Phono's python backend API
 FROM python:3.8
 LABEL maintainer="Gonzalo Marcote <gonzalomarcote@gmail.com>"
-LABEL version="1.1"
+LABEL version="0.1"
 
-# Install backend
+# Install backend API
 RUN mkdir /api
 WORKDIR /api
 COPY ./api/requirements.txt /api/requirements.txt
 COPY ./api/api.py /api/api.py
 RUN pip install -r requirements.txt
 
-# Init backend
+# Init backend API
 EXPOSE 5000
 ENTRYPOINT [ "python" ]
 CMD [ "api.py" ]
