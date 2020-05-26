@@ -4,6 +4,7 @@ Personal IoT bot with arduino to get data from some sensors and API to interact 
 ## Backend
 Python backend based in Flask - https://www.flaskapi.org/  
 
+### Dev deploy locally with docker-compose
 Build and deploy locally with docker-compose:  
 `$ docker-compose -p phono up -d`
 
@@ -24,3 +25,8 @@ $ curl -X GET http://0.0.0.0:5000/1/
 $ curl -X PUT http://0.0.0.0:5000/1/ -d text="flask api is teh awesomez"
 {"url": "http://0.0.0.0:5000/1/", "text": "flask api is teh awesomez"}
 ```
+
+### Prod deploy with helm in k8s
+Deploy with helm:
+* `helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml`  
+* `helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml`  

@@ -1,19 +1,23 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: api-ingress
+  name: ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: \"true\"
 spec:
   tls:
   - hosts:
-    - api.marcote.org
+    - phono.marcote.org
     secretName: wildcard-marcote-org
   rules:
-  - host: api.marcote.org
+  - host: phono.marcote.org
     http:
       paths:
       - backend:
           serviceName: api
           servicePort: 5000
-        path: /
+        path: /api
+      - backend:
+          serviceName: collector
+          servicePort: 6000
+        path: /collector

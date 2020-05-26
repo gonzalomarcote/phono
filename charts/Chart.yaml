@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: "0.1.2"
-description: Phono's Helm chart for Kubernetes
-name: phono
-version: 0.1.2

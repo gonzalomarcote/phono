@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: \"true\"
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: wildcard-marcote-org
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - backend:
+          serviceName: api
+          servicePort: {{ .Values.ingress.apiPort }}
+        path: /
+      - backend:
+          serviceName: collector
+          servicePort: {{ .Values.ingress.collectorPort }}
+        path: /
