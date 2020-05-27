@@ -60,7 +60,7 @@ jobs:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: |
         mkdir .kube
-        echo "$KUBECONFIG:" > .kube/config
+        echo "$KUBECONFIG:" | base64 -d -i > .kube/config
         kubectl version
         kubectl cluster-info
     
