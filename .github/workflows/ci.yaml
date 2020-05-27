@@ -58,8 +58,8 @@ jobs:
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: |
-        ls -la
-        whereis kubectl
+        kubectl version
+        kubectl cluster-info
     
     # Helm 2.16.1 install
     - uses: azure/setup-helm@v1
