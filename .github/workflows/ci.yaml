@@ -57,7 +57,8 @@ jobs:
     - name: Kubectl configuration
       shell: bash
       run: |
-        export KUBECONFIG=`echo ${{ secrets.KUBECONFIG }} | base64 -d -i`
+        mkdir  ~/.kube
+        echo ${{ secrets.KUBECONFIG }} | base64 -d -i > ~/.kube/config
         kubectl version
         kubectl cluster-info
     
