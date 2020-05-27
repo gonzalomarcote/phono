@@ -50,13 +50,23 @@ jobs:
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    # Kubectl configuration
+    - name: Kubectl configuration
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+        export ${{ secrets.KUBECONFIG }}
+        kubectl version
+        kubectl cluster-info
+    
+    # Helm 2.16.1 install
+    - uses: azure/setup-helm@v1
+      with:
+        version: '2.16.1' # default is latest stable
+      id: install
+
+    # Deploy phono-api helm chart
+    - name: Deploy phono-api
+      run: |
+         helm ls
+    #    helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
+    #    helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
 
