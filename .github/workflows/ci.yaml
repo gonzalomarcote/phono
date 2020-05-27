@@ -55,9 +55,12 @@ jobs:
 
     # Kubectl configuration
     - name: Kubectl configuration
+      shell: bash
       env:
         KUBECONFIG: ${{ secrets.KUBECONFIG }}
       run: |
+        mkdir .kube
+        echo "$KUBECONFIG:" > .kube/config
         kubectl version
         kubectl cluster-info
     
@@ -68,6 +71,7 @@ jobs:
 
     # Deploy phono-api helm chart
     - name: Deploy phono-api
+      shell: bash
       run: |
          helm ls
     #    helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
