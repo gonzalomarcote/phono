@@ -54,7 +54,6 @@ jobs:
     - uses: azure/setup-kubectl@v1
       with:
         version: '1.18.2' # default is latest stable
-      id: install
 
     # Kubectl configuration
     - name: Kubectl configuration
@@ -67,7 +66,6 @@ jobs:
     - uses: azure/setup-helm@v1
       with:
         version: '2.16.1' # default is latest stable
-      id: install
 
     # Deploy phono-api helm chart
     - name: Deploy phono-api
