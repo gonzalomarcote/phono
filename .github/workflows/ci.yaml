@@ -57,9 +57,6 @@ jobs:
     - name: Kubectl configuration
       run: |
         export KUBECONFIG=${{ secrets.KUBECONFIG }}
-        whereis kubectl
-        #kubectl version
-        #kubectl cluster-info
     
     # Helm 2.16.1 install
     - uses: azure/setup-helm@v1
