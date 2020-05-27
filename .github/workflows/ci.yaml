@@ -53,7 +53,7 @@ jobs:
     # Kubectl configuration
     - name: Kubectl configuration
       run: |
-        export ${{ secrets.KUBECONFIG }}
+        export KUBECONFIG=${{ secrets.KUBECONFIG }}
         kubectl version
         kubectl cluster-info
     
