@@ -50,6 +50,12 @@ jobs:
       if: always()
       run: docker logout ${{ steps.login-ecr.outputs.registry }}
 
+    # Kubectl 1.18.2 install
+    - uses: azure/setup-kubectl@v1
+      with:
+        version: '1.18.2' # default is latest stable
+      id: install
+
     # Kubectl configuration
     - name: Kubectl configuration
       run: |
