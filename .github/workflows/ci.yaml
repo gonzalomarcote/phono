@@ -2,13 +2,13 @@
 
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow on push or pull request events
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
+      - develop
+      - 'release/*'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,6 +21,12 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
+
+    # Define environment
+    - name: Define branch
+      shell: bash
+      run: |
+        echo ${GITHUB_REF##*/}
 
     # Configure AWS credentials
     - name: Configure AWS credentials
@@ -72,6 +78,6 @@ jobs:
       shell: bash
       run: |
          helm ls
-    #    helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
-    #    helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
+         helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
+         helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
 
