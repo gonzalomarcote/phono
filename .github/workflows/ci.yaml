@@ -2,16 +2,9 @@
 
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow on push or pull request events
 on:
   push:
-    branches:
-      - master
-      - develop
-      - 'release/*'
-
-  pull_request:
     branches:
       - master
       - develop
