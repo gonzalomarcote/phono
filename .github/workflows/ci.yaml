@@ -29,6 +29,12 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    # Define environment
+    - name: Define branch
+      shell: bash
+      run: |
+        echo ${GITHUB_REF##*/}
+
     # Configure AWS credentials
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -79,6 +85,6 @@ jobs:
       shell: bash
       run: |
          helm ls
-    #    helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
-    #    helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
+         helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
+         helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
 
