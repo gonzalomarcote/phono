@@ -35,6 +35,23 @@ jobs:
       shell: bash
       run: |
         echo ${GITHUB_REF##*/}
+        case ${GITHUB_REF##*/} in
+          master)
+            echo "Deploying prod from ${GITHUB_REF##*/} branch"
+            ENV=""
+            TAG=""
+            ;;
+          develop)
+            echo "Deploying dev from ${GITHUB_REF##*/} branch"
+            ENV="-dev"
+            TAG="dev-"
+            ;;
+          release*)
+            echo "Deploying release from ${GITHUB_REF##*/} branch"
+            ENV="-release"
+            TAG="release-"
+          ;;
+        esac
 
     # AWS ECR login
     - name: Login to Amazon ECR
