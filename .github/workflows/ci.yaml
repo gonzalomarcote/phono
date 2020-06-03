@@ -22,14 +22,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Configure AWS credentials
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-west-1
-
     # Define ENV environment
     - name: Define ENV environment
       shell: bash
@@ -37,21 +29,35 @@ jobs:
         echo ${GITHUB_REF##*/}
         case ${GITHUB_REF##*/} in
           master)
-            echo "Deploying prod from ${GITHUB_REF##*/} branch"
-            ENV=""
-            TAG=""
+            export ENV=""
+            export TAG=""
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
             ;;
           develop)
-            echo "Deploying dev from ${GITHUB_REF##*/} branch"
-            ENV="-dev"
-            TAG="dev-"
+            export ENV="-dev"
+            export TAG="dev-"
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
             ;;
           release*)
-            echo "Deploying release from ${GITHUB_REF##*/} branch"
-            ENV="-release"
-            TAG="release-"
+            export ENV="-release"
+            export TAG="release-"
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
           ;;
         esac
+
+    # Configure AWS credentials
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
 
     # AWS ECR login
     - name: Login to Amazon ECR
