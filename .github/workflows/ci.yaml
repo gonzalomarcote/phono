@@ -22,11 +22,31 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define environment
-    - name: Define branch
+    # Define ENV environment
+    - name: Define ENV environment
       shell: bash
       run: |
-        echo ${GITHUB_REF##*/}
+        case ${GITHUB_REF##*/} in
+
+          master)
+            echo "Deploying prod from ${GITHUB_REF##*/} branch"
+            ENV=""
+            TAG=""
+            ;;
+
+          develop)
+            echo "Deploying dev from ${GITHUB_REF##*/} branch"
+            ENV="-dev"
+            TAG="dev-"
+            ;;
+
+          release*)
+            echo "Deploying release from ${GITHUB_REF##*/} branch"
+            ENV="-release"
+            TAG="release-"
+          ;;
+
+         esac
 
     # Configure AWS credentials
     - name: Configure AWS credentials
@@ -48,7 +68,7 @@ jobs:
         ECR_REPOSITORY: phono/api
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY
 
     # AWS ECR logout
@@ -73,11 +93,11 @@ jobs:
       with:
         version: '2.16.1' # default is latest stable
 
-    # Deploy phono-api helm chart
-    - name: Deploy phono-api
+    # Deploy phono helm charts
+    - name: Deploy phono helm charts
       shell: bash
       run: |
          helm ls
-         helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
-         helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
+         helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
+         helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
 
