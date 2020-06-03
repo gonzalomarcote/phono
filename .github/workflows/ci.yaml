@@ -22,29 +22,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define ENV environment
-    - name: Define ENV environment
-      shell: bash
-      run: |
-        echo ${GITHUB_REF##*/}
-        case ${GITHUB_REF##*/} in
-          master)
-            echo "Deploying prod from ${GITHUB_REF##*/} branch"
-            ENV=""
-            TAG=""
-            ;;
-          develop)
-            echo "Deploying dev from ${GITHUB_REF##*/} branch"
-            ENV="-dev"
-            TAG="dev-"
-            ;;
-          release*)
-            echo "Deploying release from ${GITHUB_REF##*/} branch"
-            ENV="-release"
-            TAG="release-"
-          ;;
-        esac
-
     # Configure AWS credentials
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -52,6 +29,12 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
+
+    # Define ENV environment
+    - name: Define ENV environment
+      shell: bash
+      run: |
+        echo ${GITHUB_REF##*/}
 
     # AWS ECR login
     - name: Login to Amazon ECR
@@ -94,7 +77,6 @@ jobs:
     - name: Deploy phono helm charts
       shell: bash
       run: |
-         helm ls
-         helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
-         helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
-
+        helm ls
+        helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
+        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
