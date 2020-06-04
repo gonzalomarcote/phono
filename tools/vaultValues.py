@@ -17,7 +17,8 @@ ms = os.environ["MS"]
 token = os.environ["VAULT_TOKEN"]
 
 ## Basic Token Authentication to Vault
-client = hvac.Client(url='https://vault.marcote.org:8200', token='VAULT_TOKEN')
+client = hvac.Client(url='https://vault.marcote.org:8200')
+client.token = os.environ['VAULT_TOKEN']
 print(client.is_authenticated())
 
 
