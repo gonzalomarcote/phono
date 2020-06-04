@@ -46,7 +46,7 @@ def retrieve_vault(key):
         mount_point="phono", 
     )
     print('Value under path "phono/dev" / key "api-imagePullSecrets": {val}'.format(
-        val=read_response['data'][key],
+        val=read_response['data']['key'],
     ))
     return val
 
