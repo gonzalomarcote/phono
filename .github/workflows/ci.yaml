@@ -14,8 +14,16 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    
+
+    # The python version to use
+    strategy:
+      matrix:
+        python-version: [2.7, 3.5, 3.6, 3.7, 3.8]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -96,12 +104,21 @@ jobs:
       with:
         version: '2.16.1' # default is latest stable
 
+    # Set up Python 3.7
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    # Display current Python version
+    - name: Display Python version
+      run: python -c "import sys; print(sys.version)"
+
     # Python pip install hvac and ruamel
     - name: PIP install hvac and ruamel
       shell: bash
       run: |
         pip install hvac PyYAML ruamel.yaml
-        python --version
 
     # Parse API yaml file with Vault values
     - name: Parse API yaml file with Vault values
@@ -109,7 +126,7 @@ jobs:
       run: |
         export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
         export MS="api"
-        ./phono/tools/vaultValues.py 2>&1
+        ~/phono/tools/./vaultValues.py 2>&1
 
     # Deploy phono helm charts
     - name: Deploy phono helm charts
