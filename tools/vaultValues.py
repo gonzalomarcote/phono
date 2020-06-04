@@ -8,32 +8,26 @@ import sys
 import fileinput
 import yaml
 import ruamel.yaml
-from azure.keyvault.secrets import SecretClient
-from azure.identity import DefaultAzureCredential
+import hvac
 
 
 ## Define some variables
 env = os.environ["ENV"]
 ms = os.environ["MS"]
-KVUri = "https://b2c-coco-" + env + ".vault.azure.net"
+token = os.environ["VAULT_TOKEN"]
 
-if env == "dev":
-elif env == "qa":
-elif env == "prod":
-
-
-## Loging to Azure Key Vault
-credential = DefaultAzureCredential()
-client = SecretClient(vault_url=KVUri, credential=credential)
+## Basic Token Authentication to Vault
+client = hvac.Client(url='https://vault.marcote.org:8200', token='VAULT_TOKEN')
+print(client.is_authenticated())
 
 
 ## Functions ##
-# Loop nested dictionary and find and replace "<<keyvault>>" strings with Key Vault values
+# Loop nested dictionary and find and replace "<<vault>>" strings with Key Vault values
 def lookup(d, pat, rep, path=[]):
     if isinstance(d, dict):
         for k, v in d.items():
-            if d[k] == "<<keyvault>>":
-                d[k] = retrieve_keyvault(ms + "-" + k.replace("_", "-"))
+            if d[k] == "<<vault>>":
+                d[k] = retrieve_vault(ms + "-" + k)
                 #yield (path + [k], v) # for testing purposes. Do NOT uncomment this line
             else:
                lookup(d[k], pat, rep)
@@ -44,10 +38,16 @@ def lookup(d, pat, rep, path=[]):
             else:
                lookup(d[idx], pat, rep)
 
-# Function retrieve_keyvault() to retrieve "keyvault" values in Azure Key Vault
-def retrieve_keyvault(key):
-    retrieved_secret = client.get_secret(key)
-    return retrieved_secret.value
+# Function retrieve_vault() to retrieve "vault" values in Hashicorp Vault
+def retrieve_vault(key):
+    read_response = client.secrets.kv.v1.read_secret( 
+        path=ms, 
+        mount_point="phono", 
+    )
+    print('Value under path "phono/dev" / key "api-imagePullSecrets": {val}'.format(
+        val=read_response['data'][key],
+    ))
+    return val
 
 
 ## Program ##
@@ -56,7 +56,7 @@ yaml = ruamel.yaml.YAML()
 yaml.preserve_quotes = True
 
 # Open and read file and load in a dictionary
-filename = "./ci/secrets/values-" + str(env) + ".yaml"
+filename = "./charts/" + str(ms)  + "/secrets/values-" + str(env) + ".yaml"
 with open(filename) as file:
     data = yaml.load(file)
 
@@ -64,8 +64,8 @@ with open(filename) as file:
 lookup(data, 'keyvault', 'test')
 
 # Rewrite replaced values to file
-with open(filename, 'w') as file:
-        yaml.dump(data, file)
+#with open(filename, 'w') as file:
+#        yaml.dump(data, file)
 
 # Close file
 file.close()
