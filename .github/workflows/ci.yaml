@@ -119,7 +119,7 @@ jobs:
       run: |
         export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
         export MS="api"
-        ~/phono/tools/./vaultValues.py 2>&1
+        ./tools/vaultValues.py 2>&1
 
     # Deploy phono helm charts
     - name: Deploy phono helm charts
