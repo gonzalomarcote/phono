@@ -56,7 +56,7 @@ yaml = ruamel.yaml.YAML()
 yaml.preserve_quotes = True
 
 # Open and read file and load in a dictionary
-filename = "./charts/" + str(ms)  + "/secrets/values-" + str(env) + ".yaml"
+filename = "./charts/" + str(ms)  + "/secrets/values" + str(env) + ".yaml"
 with open(filename) as file:
     data = yaml.load(file)
 
