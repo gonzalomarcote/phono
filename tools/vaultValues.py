@@ -25,7 +25,8 @@ print(client.is_authenticated())
 # Function retrieve_vault() to retrieve "vault" values in Hashicorp Vault
 def retrieve_vault(key):
     read_response = client.secrets.kv.v1.read_secret( 
-        path="phono/dev/api-image",
+        path="dev/api-image",
+        mount_point="phono",
     )
     print('Value under path "phono/dev" and key "api-image": {val}'.format(
         val=read_response['data']['api-image'],
