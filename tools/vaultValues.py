@@ -18,7 +18,7 @@ token = os.environ["VAULT_TOKEN"]
 
 ## Basic Token Authentication to Vault
 client = hvac.Client(url='https://vault.marcote.org:8200')
-client.token = os.environ['VAULT_TOKEN']
+client.token = os.environ['token']
 print(client.is_authenticated())
 
 
@@ -42,7 +42,7 @@ def lookup(d, pat, rep, path=[]):
 # Function retrieve_vault() to retrieve "vault" values in Hashicorp Vault
 def retrieve_vault(key):
     read_response = client.secrets.kv.v1.read_secret( 
-        path = "dev/" + str(key),
+        path = str(env) + "/" + str(key),
         mount_point = "phono",
     )
     val = read_response['data'][key]
