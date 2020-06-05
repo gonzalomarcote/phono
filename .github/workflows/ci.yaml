@@ -14,6 +14,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   build:
+
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -22,11 +23,34 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define environment
-    - name: Define branch
+    # Define ENV environment
+    - name: Define ENV environment
       shell: bash
       run: |
         echo ${GITHUB_REF##*/}
+        case ${GITHUB_REF##*/} in
+          master)
+            export ENV=""
+            export TAG=""
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            ;;
+          develop)
+            export ENV="-dev"
+            export TAG="dev-"
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            ;;
+          *)
+            export ENV="-release"
+            export TAG="release-"
+            echo "::set-env name=ENV::$ENV"
+            echo "::set-env name=TAG::$TAG"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+          ;;
+        esac
 
     # Configure AWS credentials
     - name: Configure AWS credentials
@@ -48,7 +72,7 @@ jobs:
         ECR_REPOSITORY: phono/api
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY
 
     # AWS ECR logout
@@ -73,11 +97,48 @@ jobs:
       with:
         version: '2.16.1' # default is latest stable
 
-    # Deploy phono-api helm chart
-    - name: Deploy phono-api
+    # Set up Python 3.7
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+
+    # Display current Python version
+    - name: Display Python version
+      run: python -c "import sys; print(sys.version)"
+
+    # Python pip install hvac and ruamel
+    - name: PIP install hvac and ruamel
       shell: bash
       run: |
-         helm ls
-         helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml
-         helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml
+        pip install hvac PyYAML ruamel.yaml
 
+    # Parse Ingress yaml file with Vault values
+    - name: Parse Ingress yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="ingress"
+        ./tools/vaultValues.py 2>&1
+
+    # Parse API yaml file with Vault values
+    - name: Parse API yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="api"
+        ./tools/vaultValues.py 2>&1
+
+    # Deploy Ingress phono helm chart
+    - name: Deploy Ingress phono helm chart
+      shell: bash
+      run: |
+        helm ls
+        helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
+
+    # Deploy API phono helm chart
+    - name: Deploy API phono helm chart
+      shell: bash
+      run: |
+        helm ls
+        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
