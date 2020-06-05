@@ -42,7 +42,7 @@ def lookup(d, pat, rep, path=[]):
 # Function retrieve_vault() to retrieve "vault" values in Hashicorp Vault
 def retrieve_vault(key):
     read_response = client.secrets.kv.v1.read_secret( 
-        path = str(env) + "/" + str(key),
+        path = str(env[1:]) + "/" + str(key),
         mount_point = "phono",
     )
     val = read_response['data'][key]
