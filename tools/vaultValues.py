@@ -60,11 +60,11 @@ with open(filename) as file:
     data = yaml.load(file)
 
 # Parse yaml with Azure Key Values - lookup() function
-lookup(data, 'keyvault', 'test')
+lookup(data, 'vault', 'test')
 
 # Rewrite replaced values to file
-#with open(filename, 'w') as file:
-#        yaml.dump(data, file)
+with open(filename, 'w') as file:
+        yaml.dump(data, file)
 
 # Close file
 file.close()
