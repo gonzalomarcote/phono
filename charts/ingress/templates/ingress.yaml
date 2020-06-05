@@ -8,7 +8,7 @@ spec:
   tls:
   - hosts:
     - {{ .Values.ingress.host }}
-    secretName: wildcard-marcote-org
+    secretName: {{ .Values.ingress.secretName }}
   rules:
   - host: {{ .Values.ingress.host }}
     http:

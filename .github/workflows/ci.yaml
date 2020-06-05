@@ -113,6 +113,14 @@ jobs:
       run: |
         pip install hvac PyYAML ruamel.yaml
 
+    # Parse Ingress yaml file with Vault values
+    - name: Parse Ingress yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="ingress"
+        ./tools/vaultValues.py 2>&1
+
     # Parse API yaml file with Vault values
     - name: Parse API yaml file with Vault values
       shell: bash
@@ -121,10 +129,16 @@ jobs:
         export MS="api"
         ./tools/vaultValues.py 2>&1
 
-    # Deploy phono helm charts
-    - name: Deploy phono helm charts
+    # Deploy Ingress phono helm chart
+    - name: Deploy Ingress phono helm chart
       shell: bash
       run: |
         helm ls
         helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
+
+    # Deploy API phono helm chart
+    - name: Deploy API phono helm chart
+      shell: bash
+      run: |
+        helm ls
         helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
