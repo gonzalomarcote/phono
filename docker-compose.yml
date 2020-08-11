@@ -13,3 +13,13 @@ services:
     environment:
       DATABASE_URL: postgres://postgres@db
 
+  broker:
+    build:
+      context: broker/
+      dockerfile: Dockerfile
+      cache_from:
+        - phono/broker:latest
+    image: phono/broker:latest
+    container_name: broker
+    ports:
+      - "1883:1883"
