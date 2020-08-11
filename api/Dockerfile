@@ -6,8 +6,8 @@ LABEL version="0.1"
 # Install backend API
 RUN mkdir /api
 WORKDIR /api
-COPY ./api/requirements.txt /api/requirements.txt
-COPY ./api/api.py /api/api.py
+COPY requirements.txt /api/requirements.txt
+COPY api.py /api/api.py
 RUN pip install -r requirements.txt
 
 # Init backend API
