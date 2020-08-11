@@ -2,7 +2,7 @@ version: "3.2"
 services:
   api:
     build:
-      context: .
+      context: api/.
       dockerfile: Dockerfile
       cache_from:
         - phono/api:latest

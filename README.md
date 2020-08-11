@@ -1,5 +1,5 @@
 # Phono
-Personal IoT bot with arduino to get data from some sensors and API to interact with.  
+Personal IoT bot with arduino to get data from some sensors and API to interact with them.  
 
 ## Backend
 Python backend based in Flask - https://www.flaskapi.org/  
