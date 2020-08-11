@@ -20,6 +20,10 @@ Deploy with helm:
 `helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml`  
 `helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml`  
 
+### Deploy with CI/CD in GitHub Actions
+See `.github/workflows/ci.yaml` self-commented file.  
+https://vault.marcote.org:8200 must be *unsealed*.  
+
 ### Interact with phono api:
 ```
 $ curl -X GET http://0.0.0.0:5000/  or curl -X GET https://phono.marcote.org
