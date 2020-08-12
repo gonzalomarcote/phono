@@ -25,6 +25,8 @@ spec:
       app: phono
   template:
     metadata:
+      annotations:
+        timestamp: {{ .Values.timestamp }}
       labels:
         app: phono
         release: {{ .Release.Name  }}

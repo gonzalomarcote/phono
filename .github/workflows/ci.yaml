@@ -23,10 +23,12 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define ENV environment
-    - name: Define ENV environment
+    # Define ENV and DATE environment variables
+    - name: Define ENV and DATE environment variables
       shell: bash
       run: |
+        echo "::set-env name=DATE::$(date +'%Y-%m-%dT%H:%M:%S')"
+        echo ${DATE}
         echo ${GITHUB_REF##*/}
         case ${GITHUB_REF##*/} in
           master)
@@ -141,4 +143,4 @@ jobs:
       shell: bash
       run: |
         helm ls
-        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
+        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${DATE}
