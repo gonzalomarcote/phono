@@ -36,21 +36,21 @@ jobs:
             export TAG=""
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
             ;;
           develop)
             export ENV="-dev"
             export TAG="dev-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
             ;;
           *)
             export ENV="-release"
             export TAG="release-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
           ;;
         esac
 
