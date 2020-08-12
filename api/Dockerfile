@@ -8,8 +8,7 @@ RUN mkdir /api
 WORKDIR /api
 COPY requirements.txt /api/requirements.txt
 COPY api.py /api/api.py
-#RUN pip install -r requirements.txt
-RUN pip install Flask-API
+RUN pip install -r requirements.txt
 
 # Init backend API
 EXPOSE 5000
