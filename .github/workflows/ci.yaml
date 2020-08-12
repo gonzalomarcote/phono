@@ -26,7 +26,7 @@ jobs:
     # Define NOW var
     - name: Define NOW var
       shell: bash
-      run: echo "::set-env name=NOW::$(date +'%Y-%m-%dT%H:%M:%S')"
+      run: echo "::set-env name=NOW::$(TZ=":Europe/Madrid" date +'%Y-%m-%dT%H:%M:%S')"
 
     # Define ENV var
     - name: Define ENV var
