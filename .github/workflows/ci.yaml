@@ -23,12 +23,15 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define ENV and DATE environment variables
-    - name: Define ENV and DATE environment variables
+    # Define NOW var
+    - name: Define NOW var
+      shell: bash
+      run: echo "::set-env name=NOW::$(date +'%Y-%m-%dT%H:%M:%S')"
+
+    # Define ENV var
+    - name: Define ENV var
       shell: bash
       run: |
-        echo "::set-env name=DATE::$(date +'%Y-%m-%dT%H:%M:%S')"
-        echo ${DATE}
         echo ${GITHUB_REF##*/}
         case ${GITHUB_REF##*/} in
           master)
@@ -36,21 +39,21 @@ jobs:
             export TAG=""
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
             ;;
           develop)
             export ENV="-dev"
             export TAG="dev-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
             ;;
           *)
             export ENV="-release"
             export TAG="release-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${DATE}"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
           ;;
         esac
 
@@ -143,4 +146,4 @@ jobs:
       shell: bash
       run: |
         helm ls
-        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${DATE}
+        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${NOW}
