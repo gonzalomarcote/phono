@@ -46,3 +46,9 @@ Create a named volume:
     docker volume create --name mosquitto_data
 
 Now it can be attached to docker by using `-v mosquitto_data:/mqtt/data` in the Example above. Be aware that the permissions within the volumes are most likely too restrictive.
+
+### Start topic for test
+
+You can start a topic for testing with authentication with:
+
+    mosquitto_sub -t "test/#" -u "user" -P "passwd"
