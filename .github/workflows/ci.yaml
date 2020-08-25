@@ -118,6 +118,17 @@ jobs:
       run: |
         pip install hvac PyYAML ruamel.yaml
 
+    # Unseal https://vault.marcote.org Vault
+    - name: Unseal Vault
+      shell: bash
+      run: |
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_1 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_2 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_3 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+
     # Parse Ingress yaml file with Vault values
     - name: Parse Ingress yaml file with Vault values
       shell: bash
