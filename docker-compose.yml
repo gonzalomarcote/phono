@@ -24,3 +24,8 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+    volumes:
+      - /home/gmarcote/Projects/phono/broker/volumes/config:/mqtt/config:ro
+      - /home/gmarcote/Projects/phono/broker/volumes/log:/mqtt/log
+      - /home/gmarcote/Projects/phono/broker/volumes/data:/mqtt/data
+
