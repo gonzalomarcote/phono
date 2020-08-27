@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: broker
   labels:
-    app: phono
+    app: broker
     release: {{ .Release.Name  }}
 spec:
   ports:
@@ -14,14 +14,14 @@ spec:
     port: {{ .Values.service.externalPortTLS }}
     targetPort: {{ .Values.service.internalPortTLS }}
   selector:
-    app: phono
+    app: broker
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Values.PersistentVolumeClaim.pvClaimName }}
   labels:
-    app: phono
+    app: broker
 spec:
   accessModes:
     - ReadWriteOnce
@@ -35,18 +35,18 @@ kind: Deployment
 metadata:
   name: broker
   labels:
-    app: phono
+    app: broker
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: phono
+      app: broker
   template:
     metadata:
       annotations:
         timestamp: {{ .Values.timestamp }}
       labels:
-        app: phono
+        app: broker
         release: {{ .Release.Name  }}
     spec:
       containers:
