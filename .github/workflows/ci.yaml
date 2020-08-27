@@ -80,6 +80,16 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest api/.
         docker push $ECR_REGISTRY/$ECR_REPOSITORY
 
+    # Docher build & push phono/broker to ECR
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: phono/broker
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest broker/.
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY
+
     # AWS ECR logout
     - name: Logout of Amazon ECR
       if: always()
