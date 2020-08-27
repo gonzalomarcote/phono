@@ -18,7 +18,7 @@ RUN chown -R mosquitto:mosquitto /mqtt
 VOLUME ["/mqtt/config", "/mqtt/data", "/mqtt/log"]
 
 # Expose ports
-EXPOSE 1883 9001
+EXPOSE 1883 8883 9001
 
 # Initialize
 ADD docker-entrypoint.sh /usr/bin/
