@@ -61,7 +61,7 @@ spec:
           name: {{ .Values.deployment.containerPortNameTLS }}
         volumeMounts:
         - name: {{ .Values.deployment.volumeMountsName }}
-          mountPath: {{ .Values.deployment.volumeMountsMountPath }}
+          mountPath: "/mqtt/data"
         - name: ca-secret
           mountPath: "/mqtt/config/ca_certificates/"
           readOnly: true
@@ -71,7 +71,7 @@ spec:
       volumes:
       - name: {{ .Values.deployment.volumesName }}
         persistentVolumeClaim:
-          claimName: {{ .Values.deployment.volumesClaimName }}
+          claimName: broker-data-claim
       - name: ca-secret
         secret:
           secretName: ca-secret
