@@ -158,3 +158,10 @@ jobs:
       run: |
         helm ls
         helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${NOW}
+
+    # Deploy Broker phono helm chart
+    - name: Deploy Broker phono helm chart
+      shell: bash
+      run: |
+        helm ls
+        helm upgrade -i --debug phono-broker${ENV} charts/broker/ --namespace phono${ENV} -f charts/broker/secrets/values${ENV}.yaml --set-string timestamp=${NOW}

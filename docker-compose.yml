@@ -26,7 +26,6 @@ services:
       - "9001:9001"
       - "8883:8883"
     volumes:
-      - /home/gmarcote/Projects/phono/broker/volumes/config:/mqtt/config:ro
       - /home/gmarcote/Projects/phono/broker/volumes/log:/mqtt/log
       - /home/gmarcote/Projects/phono/broker/volumes/data:/mqtt/data
 

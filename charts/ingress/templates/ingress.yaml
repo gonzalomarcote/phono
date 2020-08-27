@@ -18,6 +18,14 @@ spec:
           servicePort: {{ .Values.ingress.apiPort }}
         path: /
       - backend:
+          serviceName: broker
+          servicePort: {{ .Values.ingress.brokerPort }}
+        path: /broker
+      - backend:
+          serviceName: broker
+          servicePort: {{ .Values.ingress.brokerPortTLS }}
+        path: /broker
+      - backend:
           serviceName: collector
           servicePort: {{ .Values.ingress.collectorPort }}
         path: /collector
