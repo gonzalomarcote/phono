@@ -49,6 +49,7 @@ spec:
         app: broker
         release: {{ .Release.Name  }}
     spec:
+      restartPolicy: Always
       containers:
       - name: {{ .Values.deployment.containerName }}
         image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
@@ -61,9 +62,21 @@ spec:
         volumeMounts:
         - name: {{ .Values.deployment.volumeMountsName }}
           mountPath: {{ .Values.deployment.volumeMountsMountPath }}
+        - name: ca-secret
+          mountPath: "/mqtt/config/ca_certificates/"
+          readOnly: true
+        - name: certs-secret
+          mountPath: "/mqtt/config/certs/"
+          readOnly: true
       volumes:
       - name: {{ .Values.deployment.volumesName }}
         persistentVolumeClaim:
           claimName: {{ .Values.deployment.volumesClaimName }}
+      - name: ca-secret
+        secret:
+          secretName: ca-secret
+      - name: certs-secret
+        secret:
+          secretName: certs-secret
       imagePullSecrets:
       - name: {{ .Values.deployment.imagePullSecrets }}
