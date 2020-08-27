@@ -147,6 +147,13 @@ jobs:
         export MS="ingress"
         ./tools/vaultValues.py 2>&1
 
+    # Deploy Ingress phono helm chart
+    - name: Deploy Ingress phono helm chart
+      shell: bash
+      run: |
+        helm ls
+        helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
+
     # Parse API yaml file with Vault values
     - name: Parse API yaml file with Vault values
       shell: bash
@@ -155,19 +162,20 @@ jobs:
         export MS="api"
         ./tools/vaultValues.py 2>&1
 
-    # Deploy Ingress phono helm chart
-    - name: Deploy Ingress phono helm chart
-      shell: bash
-      run: |
-        helm ls
-        helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
-
     # Deploy API phono helm chart
     - name: Deploy API phono helm chart
       shell: bash
       run: |
         helm ls
         helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${NOW}
+
+    # Parse Broker yaml file with Vault values
+    - name: Parse Broker yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="broker"
+        ./tools/vaultValues.py 2>&1
 
     # Deploy Broker phono helm chart
     - name: Deploy Broker phono helm chart
