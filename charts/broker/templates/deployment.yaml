@@ -50,6 +50,8 @@ spec:
         release: {{ .Release.Name  }}
     spec:
       restartPolicy: Always
+      securityContext:
+        fsGroup: 101
       containers:
       - name: {{ .Values.deployment.containerName }}
         image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
