@@ -56,8 +56,6 @@ spec:
     spec:
       restartPolicy: Always
       securityContext:
-        runAsUser: 101
-        runAsGroup: 101
         fsGroup: 101
       containers:
       - name: {{ .Values.deployment.containerName }}
