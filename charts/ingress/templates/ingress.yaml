@@ -28,7 +28,3 @@ spec:
           serviceName: broker
           servicePort: {{ .Values.ingress.brokerPort }}
         path: /
-      - backend:
-          serviceName: broker
-          servicePort: {{ .Values.ingress.brokerPortTLS }}
-        path: /
