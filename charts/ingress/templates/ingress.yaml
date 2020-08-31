@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ .Values.ingress.host }}
+    - {{ .Values.ingress.phonoHost }}
     secretName: {{ .Values.ingress.secretName }}
   rules:
-  - host: {{ .Values.ingress.host }}
+  - host: {{ .Values.ingress.phonoHost }}
     http:
       paths:
       - backend:
@@ -18,14 +18,17 @@ spec:
           servicePort: {{ .Values.ingress.apiPort }}
         path: /
       - backend:
-          serviceName: broker
-          servicePort: {{ .Values.ingress.brokerPort }}
-        path: /broker
-      - backend:
-          serviceName: broker
-          servicePort: {{ .Values.ingress.brokerPortTLS }}
-        path: /broker
-      - backend:
           serviceName: collector
           servicePort: {{ .Values.ingress.collectorPort }}
         path: /collector
+  - host: {{ .Values.ingress.brokerHost }}
+    http:
+      paths:
+      - backend:
+          serviceName: broker
+          servicePort: {{ .Values.ingress.brokerPort }}
+        path: /
+      - backend:
+          serviceName: broker
+          servicePort: {{ .Values.ingress.brokerPortTLS }}
+        path: /
