@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker
+  labels:
+    app: broker
+    release: {{ .Release.Name  }}
+spec:
+  ports:
+  - name: {{ .Values.service.portName }}
+    port: {{ .Values.service.externalPort }}
+    targetPort: {{ .Values.service.internalPort }}
+    nodePort: {{ .Values.service.nodePort }}
+    protocol: TCP
+  - name: {{ .Values.service.portNameTLS }}
+    port: {{ .Values.service.externalPortTLS }}
+    targetPort: {{ .Values.service.internalPortTLS }}
+    nodePort: {{ .Values.service.nodePortTLS }}
+    protocol: TCP
+  selector:
+    app: broker
+  type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.PersistentVolumeClaim.pvClaimName }}
+  labels:
+    app: broker
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  resources:
+    requests:
+      storage: {{ .Values.PersistentVolumeClaim.storage }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker
+  labels:
+    app: broker
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: broker
+  template:
+    metadata:
+      annotations:
+        timestamp: {{ .Values.timestamp }}
+      labels:
+        app: broker
+        release: {{ .Release.Name  }}
+    spec:
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 101
+      containers:
+      - name: {{ .Values.deployment.containerName }}
+        image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
+        imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.deployment.containerPort }}
+          name: {{ .Values.deployment.containerPortName }}
+        - containerPort: {{ .Values.deployment.containerPortTLS }}
+          name: {{ .Values.deployment.containerPortNameTLS }}
+        volumeMounts:
+        - name: {{ .Values.deployment.volumeMountsName }}
+          mountPath: "/mqtt/data"
+        - name: ca-secret
+          mountPath: "/mqtt/config/ca_certificates/"
+          readOnly: true
+        - name: certs-secret
+          mountPath: "/mqtt/config/certs/"
+          readOnly: true
+      volumes:
+      - name: {{ .Values.deployment.volumesName }}
+        persistentVolumeClaim:
+          claimName: broker-data-claim
+      - name: ca-secret
+        secret:
+          secretName: ca-secret
+      - name: certs-secret
+        secret:
+          secretName: certs-secret
+      imagePullSecrets:
+      - name: {{ .Values.deployment.imagePullSecrets }}

@@ -7,17 +7,21 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ .Values.ingress.host }}
+    - {{ .Values.ingress.phonoHost }}
+    - {{ .Values.ingress.collectorHost }}
     secretName: {{ .Values.ingress.secretName }}
   rules:
-  - host: {{ .Values.ingress.host }}
+  - host: {{ .Values.ingress.phonoHost }}
     http:
       paths:
       - backend:
           serviceName: api
           servicePort: {{ .Values.ingress.apiPort }}
         path: /
+  - host: {{ .Values.ingress.collectorHost }}
+    http:
+      paths:
       - backend:
           serviceName: collector
           servicePort: {{ .Values.ingress.collectorPort }}
-        path: /collector
+        path: /

@@ -23,8 +23,13 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Define ENV environment
-    - name: Define ENV environment
+    # Define NOW var
+    - name: Define NOW var
+      shell: bash
+      run: echo "::set-env name=NOW::$(TZ=":Europe/Madrid" date +'%Y-%m-%dT%H:%M:%S')"
+
+    # Define ENV var
+    - name: Define ENV var
       shell: bash
       run: |
         echo ${GITHUB_REF##*/}
@@ -34,21 +39,21 @@ jobs:
             export TAG=""
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
             ;;
           develop)
             export ENV="-dev"
             export TAG="dev-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
             ;;
           *)
             export ENV="-release"
             export TAG="release-"
             echo "::set-env name=ENV::$ENV"
             echo "::set-env name=TAG::$TAG"
-            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch"
+            echo "Deploying ${ENV:1} from ${GITHUB_REF##*/} branch at ${NOW}"
           ;;
         esac
 
@@ -72,7 +77,17 @@ jobs:
         ECR_REPOSITORY: phono/api
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest api/.
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY
+
+    # Docher build & push phono/broker to ECR
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: phono/broker
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:${TAG}latest broker/.
         docker push $ECR_REGISTRY/$ECR_REPOSITORY
 
     # AWS ECR logout
@@ -113,20 +128,23 @@ jobs:
       run: |
         pip install hvac PyYAML ruamel.yaml
 
+    # Unseal https://vault.marcote.org Vault
+    - name: Unseal Vault
+      shell: bash
+      run: |
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_1 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_2 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+        curl --request POST --data '{"key": "'"${{ secrets.SEAL_3 }}"'"}' https://vault.marcote.org:8200/v1/sys/unseal
+        sleep 1
+
     # Parse Ingress yaml file with Vault values
     - name: Parse Ingress yaml file with Vault values
       shell: bash
       run: |
         export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
         export MS="ingress"
-        ./tools/vaultValues.py 2>&1
-
-    # Parse API yaml file with Vault values
-    - name: Parse API yaml file with Vault values
-      shell: bash
-      run: |
-        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
-        export MS="api"
         ./tools/vaultValues.py 2>&1
 
     # Deploy Ingress phono helm chart
@@ -136,9 +154,32 @@ jobs:
         helm ls
         helm upgrade -i --debug phono-ingress${ENV} charts/ingress/ --namespace phono${ENV} -f charts/ingress/secrets/values${ENV}.yaml
 
+    # Parse API yaml file with Vault values
+    - name: Parse API yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="api"
+        ./tools/vaultValues.py 2>&1
+
     # Deploy API phono helm chart
     - name: Deploy API phono helm chart
       shell: bash
       run: |
         helm ls
-        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml
+        helm upgrade -i --debug phono-api${ENV} charts/api/ --namespace phono${ENV} -f charts/api/secrets/values${ENV}.yaml --set-string timestamp=${NOW}
+
+    # Parse Broker yaml file with Vault values
+    - name: Parse Broker yaml file with Vault values
+      shell: bash
+      run: |
+        export VAULT_TOKEN=${{ secrets.VAULT_TOKEN }}
+        export MS="broker"
+        ./tools/vaultValues.py 2>&1
+
+    # Deploy Broker phono helm chart
+    - name: Deploy Broker phono helm chart
+      shell: bash
+      run: |
+        helm ls
+        helm upgrade -i --debug phono-broker${ENV} charts/broker/ --namespace phono${ENV} -f charts/broker/secrets/values${ENV}.yaml --set-string timestamp=${NOW}

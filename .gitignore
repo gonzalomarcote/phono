@@ -1,0 +1,4 @@
+**/certs/*
+**/ca_certificates/*
+broker/volumes/data/*
+broker/volumes/log/*

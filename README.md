@@ -1,5 +1,5 @@
 # Phono
-Personal IoT bot with arduino to get data from some sensors and API to interact with.  
+Personal IoT bot with arduino to get data from some sensors, send to one MQTT broker and one API to interact with them.  
 
 ## Backend
 Python backend based in Flask - https://www.flaskapi.org/  
@@ -19,6 +19,10 @@ Remove with:
 Deploy with helm:
 `helm upgrade -i --debug phono-ingress charts/ingress/ --namespace phono -f charts/ingress/secrets/values.yaml`  
 `helm upgrade -i --debug phono-api charts/api/ --namespace phono -f charts/api/secrets/values.yaml`  
+
+### Deploy with CI/CD in GitHub Actions
+See `.github/workflows/ci.yaml` self-commented file.  
+https://vault.marcote.org:8200 must be *unsealed*.  
 
 ### Interact with phono api:
 ```

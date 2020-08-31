@@ -3,32 +3,35 @@ kind: Service
 metadata:
   name: api
   labels:
-    app: phono
+    app: api
     release: {{ .Release.Name  }}
 spec:
   ports:
   - port: {{ .Values.service.externalPort }}
     targetPort: {{ .Values.service.internalPort }}
   selector:
-    app: phono
+    app: api
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
   labels:
-    app: phono
+    app: api
 spec:
   replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: phono
+      app: api
   template:
     metadata:
+      annotations:
+        timestamp: {{ .Values.timestamp }}
       labels:
-        app: phono
+        app: api
         release: {{ .Release.Name  }}
     spec:
+      restartPolicy: Always
       containers:
       - name: {{ .Values.deployment.containerName }}
         image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}

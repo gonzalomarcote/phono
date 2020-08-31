@@ -2,7 +2,7 @@ version: "3.2"
 services:
   api:
     build:
-      context: .
+      context: api/.
       dockerfile: Dockerfile
       cache_from:
         - phono/api:latest
@@ -12,4 +12,20 @@ services:
       - "5000:5000"
     environment:
       DATABASE_URL: postgres://postgres@db
+
+  broker:
+    build:
+      context: broker/
+      dockerfile: Dockerfile
+      cache_from:
+        - phono/broker:latest
+    image: phono/broker:latest
+    container_name: broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+      - "8883:8883"
+    volumes:
+      - /home/gmarcote/Projects/phono/broker/volumes/log:/mqtt/log
+      - /home/gmarcote/Projects/phono/broker/volumes/data:/mqtt/data
 
