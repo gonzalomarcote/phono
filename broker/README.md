@@ -51,8 +51,10 @@ Now it can be attached to docker by using `-v mosquitto_data:/mqtt/data` in the 
 
 You can start a topic for testing with authentication with:
 
-    mosquitto_sub -h broker.marcote.org -t "test" -p 1883 -u "user" -P "passwd"
+    $ mosquitto_sub -h broker.marcote.org -t "collector1" -p 30683 --capath /etc/ssl/certs/ -u "user" -P "passwd"
+    $ mosquitto_sub -h broker.marcote.org -t "collector1" -p 30583 -u "user" -P "passwd"
 
-Or with SSL (from outside) in 8883 port with:
+And send messaged with:
 
-    mosquitto_sub -h broker.marcote.org -t "test" -p 8883 --capath /etc/ssl/certs/ -u "user" -P "passwd"
+    $ mosquitto_pub -h broker.marcote.org -t "collector1" -m "Hi there!" -p 30683 --capath /etc/ssl/certs/ -u "gonzalo" -P "1019gon\$44"
+    $ mosquitto_pub -h broker.marcote.org -t "collector1" -m "Hi there!" -p 30583 -u "gonzalo" -P "1019gon\$44"
