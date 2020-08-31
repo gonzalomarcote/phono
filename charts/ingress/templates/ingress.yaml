@@ -8,6 +8,7 @@ spec:
   tls:
   - hosts:
     - {{ .Values.ingress.phonoHost }}
+    - {{ .Values.ingress.collectorHost }}
     secretName: {{ .Values.ingress.secretName }}
   rules:
   - host: {{ .Values.ingress.phonoHost }}
@@ -17,14 +18,10 @@ spec:
           serviceName: api
           servicePort: {{ .Values.ingress.apiPort }}
         path: /
-      - backend:
-          serviceName: collector
-          servicePort: {{ .Values.ingress.collectorPort }}
-        path: /collector
-  - host: {{ .Values.ingress.brokerHost }}
+  - host: {{ .Values.ingress.collectorHost }}
     http:
       paths:
       - backend:
-          serviceName: broker
-          servicePort: {{ .Values.ingress.brokerPort }}
+          serviceName: collector
+          servicePort: {{ .Values.ingress.collectorPort }}
         path: /

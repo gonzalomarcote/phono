@@ -10,11 +10,16 @@ spec:
   - name: {{ .Values.service.portName }}
     port: {{ .Values.service.externalPort }}
     targetPort: {{ .Values.service.internalPort }}
+    nodePort: {{ .Values.service.nodePort }}
+    protocol: TCP
   - name: {{ .Values.service.portNameTLS }}
     port: {{ .Values.service.externalPortTLS }}
     targetPort: {{ .Values.service.internalPortTLS }}
+    nodePort: {{ .Values.service.nodePortTLS }}
+    protocol: TCP
   selector:
     app: broker
+  type: NodePort
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
