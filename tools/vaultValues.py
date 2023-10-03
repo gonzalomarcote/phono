@@ -24,6 +24,7 @@ print(client.is_authenticated())
 
 ## Functions ##
 # Loop nested dictionary and find and replace "<<vault>>" strings with Key Vault values
+# Based on ruamel example: https://stackoverflow.com/questions/53543540/how-to-replace-many-identical-values-in-a-yaml-file
 def lookup(d, pat, rep, path=[]):
     if isinstance(d, dict):
         for k, v in d.items():
